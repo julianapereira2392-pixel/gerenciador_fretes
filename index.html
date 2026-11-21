@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciador Logístico | Painel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-icon"><i class="bi bi-box-seam"></i></div>
+        <div><strong>LogiFlow</strong><small>GERENCIADOR LOGÍSTICO</small></div>
+      </div>
+      <div class="menu-label">MENU PRINCIPAL</div>
+      <nav class="nav flex-column">
+        <a class="nav-link active" href="#" data-page="dashboard"><i class="bi bi-grid-1x2"></i> Visão geral</a>
+        <a class="nav-link" href="#" data-page="products"><i class="bi bi-box"></i> Produtos</a>
+        <a class="nav-link" href="#" data-page="addresses"><i class="bi bi-geo-alt"></i> Endereços</a>
+        <a class="nav-link" href="#" data-page="carriers"><i class="bi bi-truck"></i> Transportadores</a>
+        <a class="nav-link" href="#" data-page="freights"><i class="bi bi-arrow-left-right"></i> Fretes</a>
+        <a class="nav-link" href="#" data-page="reports"><i class="bi bi-file-earmark-bar-graph"></i> Relatórios</a>
+      </nav>
+      <div class="sidebar-footer"><i class="bi bi-shield-check"></i><span>Ambiente de demonstração</span></div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="btn btn-light d-lg-none" id="menuToggle" aria-label="Abrir menu"><i
+            class="bi bi-list"></i></button>
+        <div><span class="eyebrow">PAINEL DE CONTROLE</span>
+          <h1 id="pageTitle">Visão geral</h1>
+        </div>
+        <div class="topbar-right"><span class="status-dot"></span><span class="small text-secondary">Sistema de
+            logística</span>
+          <div class="avatar">LG</div>
+        </div>
+      </header>
+
+      <section class="page active" id="page-dashboard">
+        <div class="welcome-panel">
+          <div><span class="eyebrow light">BEM-VINDO AO LOGIFLOW</span>
+            <h2>Organize suas operações<br>em um só lugar.</h2>
+            <p>Cadastre produtos, gerencie transportadores e acompanhe seus fretes.</p>
+          </div>
+          <div class="welcome-art"><i class="bi bi-truck"></i><i class="bi bi-box-seam"></i><i
+              class="bi bi-geo-alt"></i></div>
+        </div>
+        <div class="row g-3 mt-1">
+          <div class="col-sm-6 col-xl-3">
+            <div class="stat-card">
+              <div class="stat-icon blue"><i class="bi bi-box"></i></div><span>Produtos cadastrados</span><strong
+                id="countProducts">0</strong><small>Itens registrados no sistema</small>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="stat-card">
+              <div class="stat-icon purple"><i class="bi bi-truck"></i></div><span>Transportadores</span><strong
+                id="countCarriers">0</strong><small>Parceiros de transporte</small>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="stat-card">
+              <div class="stat-icon orange"><i class="bi bi-geo-alt"></i></div><span>Endereços</span><strong
+                id="countAddresses">0</strong><small>Locais cadastrados</small>
+            </div>
+          </div>
+          <div class="col-sm-6 col-xl-3">
+            <div class="stat-card">
+              <div class="stat-icon green"><i class="bi bi-arrow-left-right"></i></div><span>Fretes
+                realizados</span><strong id="countFreights">0</strong><small>Operações registradas</small>
+            </div>
+          </div>
+        </div>
+        <div class="content-card mt-4">
+          <div class="section-heading">
+            <div><span class="eyebrow">ACOMPANHAMENTO</span>
+              <h3>Fretes recentes</h3>
+            </div><button class="btn btn-outline-primary btn-sm" data-go="freights">Ver fretes <i
+                class="bi bi-arrow-right"></i></button>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Transportador</th>
+                  <th>Data</th>
+                  <th>Produtos</th>
+                  <th>Valor</th>
+                </tr>
+              </thead>
+              <tbody id="recentFreights">
+                <tr>
+                  <td colspan="5" class="empty-state">Nenhum frete cadastrado ainda.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-products">
+        <div class="section-heading">
+          <div><span class="eyebrow">ESTOQUE E MERCADORIAS</span>
+            <h3>Cadastro de produtos</h3>
+            <p>Registre e mantenha os produtos que poderão ser incluídos nos fretes.</p>
+          </div>
+        </div>
+        <div class="content-card">
+          <form id="productForm" class="row g-3">
+            <input type="hidden" id="productId">
+            <div class="col-md-6"><label class="form-label">Nome do produto *</label><input class="form-control"
+                id="productName" required placeholder="Ex.: Caixa de papel A4"></div>
+            <div class="col-md-6"><label class="form-label">Categoria</label><input class="form-control"
+                id="productCategory" placeholder="Ex.: Escritório"></div>
+            <div class="col-12"><label class="form-label">Descrição</label><textarea class="form-control"
+                id="productDescription" rows="2" placeholder="Descreva o produto"></textarea></div>
+            <div class="col-md-3"><label class="form-label">Peso (kg) *</label><input class="form-control"
+                id="productWeight" type="number" min="0" step="0.01" required></div>
+            <div class="col-md-3"><label class="form-label">Quantidade *</label><input class="form-control"
+                id="productQuantity" type="number" min="1" required></div>
+            <div class="col-md-3"><label class="form-label">Valor unitário (R$)</label><input class="form-control"
+                id="productValue" type="number" min="0" step="0.01"></div>
+            <div class="col-md-3 d-flex align-items-end gap-2"><button class="btn btn-primary flex-grow-1"
+                type="submit"><i class="bi bi-check2-circle"></i> Salvar produto</button><button class="btn btn-light"
+                type="button" id="cancelProduct">Limpar</button></div>
+          </form>
+        </div>
+        <div class="content-card mt-4">
+          <div class="section-heading">
+            <h3>Produtos cadastrados</h3><span class="counter" id="productsTotal">0 registros</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>Produto</th>
+                  <th>Categoria</th>
+                  <th>Peso</th>
+                  <th>Quantidade</th>
+                  <th>Valor</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="productsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-addresses">
+        <div class="section-heading">
+          <div><span class="eyebrow">LOCAIS DE OPERAÇÃO</span>
+            <h3>Cadastro de endereços</h3>
+            <p>Cadastre os pontos de origem e destino das entregas.</p>
+          </div>
+        </div>
+        <div class="content-card">
+          <form id="addressForm" class="row g-3">
+            <input type="hidden" id="addressId">
+            <div class="col-md-5"><label class="form-label">Identificação do endereço *</label><input
+                class="form-control" id="addressName" required placeholder="Ex.: Depósito central"></div>
+            <div class="col-md-3"><label class="form-label">Tipo *</label><select class="form-select" id="addressType"
+                required>
+                <option value="">Selecione</option>
+                <option>Origem</option>
+                <option>Destino</option>
+                <option>Origem e destino</option>
+              </select></div>
+            <div class="col-md-4"><label class="form-label">CEP</label><input class="form-control" id="addressCep"
+                placeholder="00000-000"></div>
+            <div class="col-md-6"><label class="form-label">Rua *</label><input class="form-control" id="addressStreet"
+                required></div>
+            <div class="col-md-2"><label class="form-label">Número</label><input class="form-control"
+                id="addressNumber"></div>
+            <div class="col-md-4"><label class="form-label">Bairro</label><input class="form-control"
+                id="addressDistrict"></div>
+            <div class="col-md-5"><label class="form-label">Cidade *</label><input class="form-control" id="addressCity"
+                required></div>
+            <div class="col-md-3"><label class="form-label">Estado *</label><input class="form-control"
+                id="addressState" maxlength="2" required placeholder="PR"></div>
+            <div class="col-md-4 d-flex align-items-end gap-2"><button class="btn btn-primary flex-grow-1"
+                type="submit">Salvar endereço</button><button class="btn btn-light" type="button"
+                id="cancelAddress">Limpar</button></div>
+          </form>
+        </div>
+        <div class="content-card mt-4">
+          <div class="section-heading">
+            <h3>Endereços cadastrados</h3><span class="counter" id="addressesTotal">0 registros</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>Identificação</th>
+                  <th>Tipo</th>
+                  <th>Endereço</th>
+                  <th>CEP</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="addressesTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-carriers">
+        <div class="section-heading">
+          <div><span class="eyebrow">EQUIPE DE TRANSPORTE</span>
+            <h3>Cadastro de transportadores</h3>
+            <p>Gerencie os responsáveis pelo transporte das mercadorias.</p>
+          </div>
+        </div>
+        <div class="content-card">
+          <form id="carrierForm" class="row g-3">
+            <input type="hidden" id="carrierId">
+            <div class="col-md-6"><label class="form-label">Nome completo / Empresa *</label><input class="form-control"
+                id="carrierName" required></div>
+            <div class="col-md-3"><label class="form-label">CPF ou CNPJ</label><input class="form-control"
+                id="carrierDocument"></div>
+            <div class="col-md-3"><label class="form-label">Telefone</label><input class="form-control"
+                id="carrierPhone"></div>
+            <div class="col-md-5"><label class="form-label">E-mail</label><input class="form-control" id="carrierEmail"
+                type="email"></div>
+            <div class="col-md-4"><label class="form-label">Tipo de veículo</label><select class="form-select"
+                id="carrierVehicle">
+                <option value="">Selecione</option>
+                <option>Carro</option>
+                <option>Utilitário</option>
+                <option>Van</option>
+                <option>Caminhão</option>
+                <option>Carreta</option>
+                <option>Outro</option>
+              </select></div>
+            <div class="col-md-3"><label class="form-label">Placa</label><input class="form-control" id="carrierPlate"
+                placeholder="ABC-1D23"></div>
+            <div class="col-md-4 d-flex align-items-end gap-2"><button class="btn btn-primary flex-grow-1"
+                type="submit">Salvar transportador</button><button class="btn btn-light" type="button"
+                id="cancelCarrier">Limpar</button></div>
+          </form>
+        </div>
+        <div class="content-card mt-4">
+          <div class="section-heading">
+            <h3>Transportadores cadastrados</h3><span class="counter" id="carriersTotal">0 registros</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Documento</th>
+                  <th>Veículo</th>
+                  <th>Placa</th>
+                  <th>Contato</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="carriersTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-freights">
+        <div class="section-heading">
+          <div><span class="eyebrow">OPERAÇÃO LOGÍSTICA</span>
+            <h3>Geração de fretes</h3>
+            <p>Relacione transportador, endereços e um ou mais produtos em uma operação.</p>
+          </div>
+        </div>
+        <div class="content-card">
+          <form id="freightForm" class="row g-3">
+            <div class="col-md-6"><label class="form-label">Transportador *</label><select class="form-select"
+                id="freightCarrier" required>
+                <option value="">Selecione um transportador</option>
+              </select></div>
+            <div class="col-md-3"><label class="form-label">Data do frete *</label><input class="form-control"
+                id="freightDate" type="date" required></div>
+            <div class="col-md-3"><label class="form-label">Valor do transporte (R$) *</label><input
+                class="form-control" id="freightValue" type="number" min="0" step="0.01" required></div>
+            <div class="col-md-6"><label class="form-label">Endereço de origem *</label><select class="form-select"
+                id="freightOrigin" required>
+                <option value="">Selecione a origem</option>
+              </select></div>
+            <div class="col-md-6"><label class="form-label">Endereço de destino *</label><select class="form-select"
+                id="freightDestination" required>
+                <option value="">Selecione o destino</option>
+              </select></div>
+            <div class="col-12"><label class="form-label">Produtos deste frete *</label>
+              <div class="product-picker" id="freightProducts"><span class="text-secondary small">Cadastre produtos para
+                  selecioná-los aqui.</span></div>
+            </div>
+            <div class="col-12 d-flex justify-content-end"><button class="btn btn-primary px-4" type="submit"><i
+                  class="bi bi-plus-circle"></i> Gerar frete</button></div>
+          </form>
+        </div>
+        <div class="content-card mt-4">
+          <div class="section-heading">
+            <h3>Fretes registrados</h3><span class="counter" id="freightsTotal">0 registros</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Data</th>
+                  <th>Transportador</th>
+                  <th>Origem → Destino</th>
+                  <th>Produtos</th>
+                  <th>Valor</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="freightsTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="page-reports">
+        <div class="section-heading">
+          <div><span class="eyebrow">CONSULTA E EXPORTAÇÃO</span>
+            <h3>Relatórios de fretes</h3>
+            <p>Filtre as operações por dia e exporte os resultados em CSV.</p>
+          </div>
+        </div>
+        <div class="content-card">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-4"><label class="form-label">Data dos fretes</label><input class="form-control"
+                type="date" id="reportDate"></div>
+            <div class="col-md-3"><button class="btn btn-primary w-100" id="filterReport"><i class="bi bi-search"></i>
+                Consultar</button></div>
+            <div class="col-md-3"><button class="btn btn-outline-primary w-100" id="exportReport"><i
+                  class="bi bi-download"></i> Baixar relatório CSV</button></div>
+            <div class="col-md-2"><button class="btn btn-light w-100" id="clearReport">Limpar filtro</button></div>
+          </div>
+        </div>
+        <div class="content-card mt-4">
+          <div class="section-heading">
+            <h3>Resultado da consulta</h3><span class="counter" id="reportTotal">0 fretes</span>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Data</th>
+                  <th>Transportador</th>
+                  <th>Origem</th>
+                  <th>Destino</th>
+                  <th>Produtos</th>
+                  <th>Valor</th>
+                </tr>
+              </thead>
+              <tbody id="reportTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      <footer class="footer">LogiFlow · Projeto acadêmico demonstrativo · UNIPAR</footer>
+    </main>
+  </div>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="appToast" class="toast text-bg-dark border-0" role="alert">
+      <div class="d-flex">
+        <div class="toast-body" id="toastMessage">Operação realizada.</div><button type="button"
+          class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Demonstração no navegador: os dados ficam salvos no localStorage deste dispositivo.
+    const $ = id => document.getElementById(id);
+    const load = key => JSON.parse(localStorage.getItem('logiflow_' + key) || '[]');
+    const save = (key, data) => localStorage.setItem('logiflow_' + key, JSON.stringify(data));
+    let products = [], addresses = load('addresses'), carriers = load('carriers'), freights = load('freights');
+    const money = value => Number(value || 0).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+    const safe = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+    const toast = message => {$('toastMessage').textContent = message; bootstrap.Toast.getOrCreateInstance($('appToast')).show();};
+    const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+    const empty = (cols, msg = 'Nenhum registro encontrado.') => `<tr><td colspan="${cols}" class="empty-state">${msg}</td></tr>`;
+    function page(name) {
+      document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + name));
+      document.querySelectorAll('.nav-link').forEach(a => a.classList.toggle('active', a.dataset.page === name));
+      const titles = {dashboard: 'Visão geral', products: 'Produtos', addresses: 'Endereços', carriers: 'Transportadores', freights: 'Fretes', reports: 'Relatórios'};
+      $('pageTitle').textContent = titles[name] || 'Visão geral';
+      $('sidebar').classList.remove('open');
+      if (name === 'freights') refreshFreightOptions();
+      if (name === 'reports') renderReports();
+    }
+    document.querySelectorAll('[data-page]').forEach(a => a.addEventListener('click', e => {e.preventDefault(); page(a.dataset.page)}));
+    document.querySelectorAll('[data-go]').forEach(a => a.addEventListener('click', () => page(a.dataset.go)));
+    $('menuToggle').addEventListener('click', () => $('sidebar').classList.toggle('open'));
+
+    function resetForm(formId, hiddenId) {$(formId).reset(); if (hiddenId) $(hiddenId).value = '';}
+    function renderProducts() {
+      $('productsTable').innerHTML = products.length ? products.map(p => `<tr><td><strong>${safe(p.nome)}</strong><div class="small text-secondary">${safe(p.descricao)}</div></td><td>${safe(p.categoria || '—')}</td><td>${safe(p.peso)} kg</td><td>${safe(p.quantidade)}</td><td>${money(p.valor)}</td><td class="actions"><button class="btn btn-sm btn-light" onclick="editProduct('${p.id}')"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm btn-light text-danger" onclick="deleteItem('products','${p.id}')"><i class="bi bi-trash"></i></button></td></tr>`).join('') : empty(6);
+      $('productsTotal').textContent = products.length + ' registros'; renderFreightProducts(); updateDashboard();
+    }
+    async function carregarProdutos() {
+      try {
+        const resposta = await fetch('listar_produtos.php', {cache: 'no-store'});
+        if (!resposta.ok) throw new Error('Erro na conexão');
+
+        products = await resposta.json();
+        renderProducts();
+      } catch (erro) {
+        console.error('Erro ao carregar produtos:', erro);
+      }
+    }
+    $('productForm').addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const dados = new URLSearchParams();
+      const id = $('productId').value;
+      if (id) {
+        dados.append('id', id);
+      }
+      dados.append('nome', $('productName').value.trim());
+      dados.append('descricao', $('productDescription').value);
+      dados.append('valor', $('productValue').value);
+      dados.append('categoria', $('productCategory').value);
+      dados.append('peso', $('productWeight').value);
+      dados.append('quantidade', $('productQuantity').value);
+
+      try {
+        const resposta = await fetch('salvar_produto.php', {
+          method: 'POST',
+          body: dados
+        });
+
+        const mensagem = await resposta.text();
+
+        if (!resposta.ok || mensagem.trim() !== 'Produto cadastrado com sucesso!') {
+          throw new Error(mensagem);
+        }
+
+        toast(mensagem);
+        await carregarProdutos();
+        resetForm('productForm', 'productId');
+      } catch (erro) {
+        toast('Erro ao salvar produto: ' + erro.message);
+      }
+    });
+
+    $('cancelProduct').onclick = () => resetForm('productForm', 'productId');
+    window.editProduct = id => {const p = products.find(x => x.id === id); if (!p) return; Object.entries({productId: 'id', productName: 'name', productCategory: 'category', productDescription: 'description', productWeight: 'weight', productQuantity: 'quantity', productValue: 'value'}).forEach(([el, k]) => $(el).value = p[k] || ''); window.scrollTo({top: 0, behavior: 'smooth'});};
+    function renderAddresses() {
+      $('addressesTable').innerHTML = addresses.length ? addresses.map(a => `<tr><td><strong>${safe(a.name)}</strong></td><td><span class="tag">${safe(a.type)}</span></td><td>${safe(a.street)}, ${safe(a.number)} · ${safe(a.district)}, ${safe(a.city)}/${safe(a.state)}</td><td>${safe(a.cep || '—')}</td><td class="actions"><button class="btn btn-sm btn-light" onclick="editAddress('${a.id}')"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm btn-light text-danger" onclick="deleteItem('addresses','${a.id}')"><i class="bi bi-trash"></i></button></td></tr>`).join('') : empty(5);
+      $('addressesTotal').textContent = addresses.length + ' registros'; refreshFreightOptions(); updateDashboard();
+    }
+    $('addressForm').addEventListener('submit', e => {e.preventDefault(); const id = $('addressId').value; const item = {id: id || uid(), name: $('addressName').value, type: $('addressType').value, cep: $('addressCep').value, street: $('addressStreet').value, number: $('addressNumber').value, district: $('addressDistrict').value, city: $('addressCity').value, state: $('addressState').value.toUpperCase()}; addresses = id ? addresses.map(x => x.id === id ? item : x) : [item, ...addresses]; save('addresses', addresses); resetForm('addressForm', 'addressId'); renderAll(); toast('Endereço salvo com sucesso!');});
+    $('cancelAddress').onclick = () => resetForm('addressForm', 'addressId');
+    window.editAddress = id => {const a = addresses.find(x => x.id === id); if (!a) return; Object.entries({addressId: 'id', addressName: 'name', addressType: 'type', addressCep: 'cep', addressStreet: 'street', addressNumber: 'number', addressDistrict: 'district', addressCity: 'city', addressState: 'state'}).forEach(([el, k]) => $(el).value = a[k] || ''); window.scrollTo({top: 0, behavior: 'smooth'});};
+    function renderCarriers() {
+      $('carriersTable').innerHTML = carriers.length ? carriers.map(c => `<tr><td><strong>${safe(c.name)}</strong></td><td>${safe(c.document || '—')}</td><td>${safe(c.vehicle || '—')}</td><td>${safe(c.plate || '—')}</td><td>${safe(c.phone || c.email || '—')}</td><td class="actions"><button class="btn btn-sm btn-light" onclick="editCarrier('${c.id}')"><i class="bi bi-pencil"></i></button> <button class="btn btn-sm btn-light text-danger" onclick="deleteItem('carriers','${c.id}')"><i class="bi bi-trash"></i></button></td></tr>`).join('') : empty(6);
+      $('carriersTotal').textContent = carriers.length + ' registros'; refreshFreightOptions(); updateDashboard();
+    }
+    $('carrierForm').addEventListener('submit', e => {e.preventDefault(); const id = $('carrierId').value; const item = {id: id || uid(), name: $('carrierName').value, document: $('carrierDocument').value, phone: $('carrierPhone').value, email: $('carrierEmail').value, vehicle: $('carrierVehicle').value, plate: $('carrierPlate').value}; carriers = id ? carriers.map(x => x.id === id ? item : x) : [item, ...carriers]; save('carriers', carriers); resetForm('carrierForm', 'carrierId'); renderAll(); toast('Transportador salvo com sucesso!');});
+    $('cancelCarrier').onclick = () => resetForm('carrierForm', 'carrierId');
+    window.editCarrier = id => {const c = carriers.find(x => x.id === id); if (!c) return; Object.entries({carrierId: 'id', carrierName: 'name', carrierDocument: 'document', carrierPhone: 'phone', carrierEmail: 'email', carrierVehicle: 'vehicle', carrierPlate: 'plate'}).forEach(([el, k]) => $(el).value = c[k] || ''); window.scrollTo({top: 0, behavior: 'smooth'});};
+
+    function refreshFreightOptions() {
+      const carrier = $('freightCarrier'), origin = $('freightOrigin'), dest = $('freightDestination');
+      const keepC = carrier.value, keepO = origin.value, keepD = dest.value;
+      carrier.innerHTML = '<option value="">Selecione um transportador</option>' + carriers.map(c => `<option value="${c.id}">${safe(c.name)}</option>`).join('');
+      const opts = addresses.map(a => `<option value="${a.id}">${safe(a.name)} — ${safe(a.city)}/${safe(a.state)} (${safe(a.type)})</option>`).join('');
+      origin.innerHTML = '<option value="">Selecione a origem</option>' + opts; dest.innerHTML = '<option value="">Selecione o destino</option>' + opts;
+      carrier.value = keepC; origin.value = keepO; dest.value = keepD;
+      renderFreightProducts();
+    }
+    function renderFreightProducts() {
+      $('freightProducts').innerHTML = products.length ? products.map(p => `<label class="product-choice"><input type="checkbox" class="form-check-input freight-product" value="${p.id}"><span><strong>${safe(p.nome)}</strong><small>${safe(p.weight)} kg · estoque: ${safe(p.quantity)}</small></span></label>`).join('') : '<span class="text-secondary small">Cadastre produtos para selecioná-los aqui.</span>';
+    }
+    $('freightForm').addEventListener('submit', e => {
+      e.preventDefault(); const selected = [...document.querySelectorAll('.freight-product:checked')].map(x => x.value);
+      if (!selected.length) {toast('Selecione pelo menos um produto.'); return;}
+      const carrier = carriers.find(x => x.id === $('freightCarrier').value), origin = addresses.find(x => x.id === $('freightOrigin').value), destination = addresses.find(x => x.id === $('freightDestination').value);
+      if (!carrier || !origin || !destination) {toast('Confira transportador e endereços cadastrados.'); return;}
+      if (origin.id === destination.id) {toast('A origem e o destino precisam ser diferentes.'); return;}
+      const item = {id: uid(), code: 'FR-' + String(Date.now()).slice(-6), date: $('freightDate').value, carrierId: carrier.id, carrierName: carrier.name, originId: origin.id, originName: origin.name, destinationId: destination.id, destinationName: destination.name, productIds: selected, productNames: selected.map(id => products.find(p => p.id === id)?.name || 'Produto'), value: $('freightValue').value};
+      freights = [item, ...freights]; save('freights', freights); $('freightForm').reset(); renderAll(); toast('Frete gerado com sucesso!');
+    });
+    function renderFreights() {
+      $('freightsTable').innerHTML = freights.length ? freights.map(f => `<tr><td><strong>${safe(f.code)}</strong></td><td>${formatDate(f.date)}</td><td>${safe(f.carrierName)}</td><td>${safe(f.originName)} <i class="bi bi-arrow-right"></i> ${safe(f.destinationName)}</td><td>${f.productNames.map(safe).join(', ')}</td><td>${money(f.value)}</td><td><button class="btn btn-sm btn-light text-danger" onclick="deleteItem('freights','${f.id}')"><i class="bi bi-trash"></i></button></td></tr>`).join('') : empty(7);
+      $('freightsTotal').textContent = freights.length + ' registros'; updateDashboard(); renderReports();
+    }
+    function formatDate(date) {if (!date) return '—'; const [y, m, d] = date.split('-'); return `${d}/${m}/${y}`;}
+    async function excluirProdutoBanco(id) {
+      try {
+        const dados = new URLSearchParams();
+        dados.append('id', id);
+
+        const resposta = await fetch('excluir_produto.php', {
+          method: 'POST',
+          body: dados
+        });
+
+        const resultado = await resposta.json();
+
+        if (!resposta.ok || !resultado.sucesso) {
+          throw new Error(resultado.erro || 'Produto não excluído');
+        }
+
+        await carregarProdutos();
+        toast('Produto excluído com sucesso!');
+      } catch (erro) {
+        console.error(erro);
+        toast('Erro ao excluir produto.');
+      }
+    }
+    window.deleteItem = (key, id) => {
+      if (key === 'products') {
+        if (confirm('Deseja realmente excluir este produto?')) {
+          excluirProdutoBanco(id);
+        }
+        return;
+      }
+      if (!confirm('Deseja realmente excluir este registro?')) return; if (key === 'products') products = products.filter(x => x.id !== id); if (key === 'addresses') addresses = addresses.filter(x => x.id !== id); if (key === 'carriers') carriers = carriers.filter(x => x.id !== id); if (key === 'freights') freights = freights.filter(x => x.id !== id); save(key, ({products, addresses, carriers, freights})[key]); renderAll(); toast('Registro excluído.');
+    };
+    function updateDashboard() {
+      $('countProducts').textContent = products.length; $('countCarriers').textContent = carriers.length; $('countAddresses').textContent = addresses.length; $('countFreights').textContent = freights.length;
+      $('recentFreights').innerHTML = freights.length ? freights.slice(0, 5).map(f => `<tr><td><strong>${safe(f.code)}</strong></td><td>${safe(f.carrierName)}</td><td>${formatDate(f.date)}</td><td>${f.productNames.map(safe).join(', ')}</td><td>${money(f.value)}</td></tr>`).join('') : empty(5, 'Nenhum frete cadastrado ainda.');
+    }
+    function renderReports() {
+      const date = $('reportDate').value; const rows = date ? freights.filter(f => f.date === date) : freights;
+      $('reportTable').innerHTML = rows.length ? rows.map(f => `<tr><td><strong>${safe(f.code)}</strong></td><td>${formatDate(f.date)}</td><td>${safe(f.carrierName)}</td><td>${safe(f.originName)}</td><td>${safe(f.destinationName)}</td><td>${f.productNames.map(safe).join(', ')}</td><td>${money(f.value)}</td></tr>`).join('') : empty(7, 'Nenhum frete encontrado para este filtro.');
+      $('reportTotal').textContent = rows.length + ' fretes';
+      return rows;
+    }
+    $('filterReport').onclick = renderReports;
+    $('clearReport').onclick = () => {$('reportDate').value = ''; renderReports();};
+    $('exportReport').onclick = () => {
+      const rows = renderReports(); if (!rows.length) {toast('Não há fretes para exportar.'); return;}
+      const data = [['Código', 'Data', 'Transportador', 'Origem', 'Destino', 'Produtos', 'Valor'], ...rows.map(f => [f.code, f.date, f.carrierName, f.originName, f.destinationName, f.productNames.join(' / '), f.value])];
+      const csv = '\uFEFF' + data.map(r => r.map(v => '"' + String(v ?? '').replace(/"/g, '""') + '"').join(';')).join('\n');
+      const url = URL.createObjectURL(new Blob([csv], {type: 'text/csv;charset=utf-8;'})); const a = document.createElement('a'); a.href = url; a.download = 'relatorio-fretes.csv'; a.click(); URL.revokeObjectURL(url); toast('Relatório baixado.');
+    };
+    function renderAll() {renderProducts(); renderAddresses(); renderCarriers(); renderFreights(); renderReports();}
+    $('freightDate').value = new Date().toISOString().slice(0, 10);
+    renderAll();
+    carregarProdutos();
+  </script>
+</body>
+
+</html>
